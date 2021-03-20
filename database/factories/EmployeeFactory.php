@@ -28,7 +28,7 @@ class EmployeeFactory extends Factory
             'company' => function () {
                 return Company::factory()->create()->id;
             },
-            'email' => $this->faker->safeEmail(),
+            'email' => $this->faker->email(),
             'phone' => $this->faker->phoneNumber()
         ];
     }
