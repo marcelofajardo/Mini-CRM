@@ -36,12 +36,14 @@
       </tr>
       </thead>
   </table>
-  <a href="{{ route('companies.edit', ['company' => $company->id ]) }}" class="btn btn-warning">Update </a>
-  <form action="{{ route('companies.destroy', ['company' => $company->id ]) }}" class="d-inline-block" method="POST">
-    @csrf
-    @method('DELETE')
-    <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to delete this company?')">Delete</button>
-  </form>
+  @if (auth()->user()->isAdmin())
+    <a href="{{ route('companies.edit', ['company' => $company->id ]) }}" class="btn btn-warning">Update </a>
+    <form action="{{ route('companies.destroy', ['company' => $company->id ]) }}" class="d-inline-block" method="POST">
+      @csrf
+      @method('DELETE')
+      <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure to delete this company?')">Delete</button>
+    </form>
+  @endif
 @stop
 
 @section('adminlte_js')

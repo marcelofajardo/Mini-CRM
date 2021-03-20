@@ -28,9 +28,18 @@ class UpdateCompanyTest extends TestCase
             ->assertRedirect(route('login'));
     }
 
-    public function test_an_authenticated_user_can_view_the_edit_company_page() 
+    public function test_a_non_administrator_cannot_view_the_edit_company_page() 
     {
-        $this->be(User::factory()->create());
+        $this->signIn();
+
+        $this->get(route('companies.edit', ['company' => $this->company->id]))
+            ->assertStatus(403);
+    }
+
+
+    public function test_an_administrator_can_view_the_edit_company_page() 
+    {
+        $this->signIn(true);
 
         $this->get(route('companies.edit', ['company' => $this->company->id]))
             ->assertStatus(200)
@@ -45,7 +54,7 @@ class UpdateCompanyTest extends TestCase
 
     public function test_a_company_must_have_name() 
     {
-        $this->be(User::factory()->administrator()->create());
+        $this->signIn(true);
 
         $company = Company::factory()->make(['name' => null]);
 
@@ -55,7 +64,7 @@ class UpdateCompanyTest extends TestCase
     
     public function test_a_company_must_have_email() 
     {
-        $this->be(User::factory()->administrator()->create());
+        $this->signIn(true);
 
         $company = Company::factory()->make(['email' => null]);
 
@@ -65,7 +74,7 @@ class UpdateCompanyTest extends TestCase
 
     public function test_a_company_must_have_website() 
     {
-        $this->be(User::factory()->administrator()->create());
+        $this->signIn(true);
 
         $company = Company::factory()->make(['website' => null]);
 
@@ -77,7 +86,7 @@ class UpdateCompanyTest extends TestCase
     {
         $file = UploadedFile::fake()->image('logo.png', 101, 101);
 
-        $this->be(User::factory()->administrator()->create());
+        $this->signIn(true);
 
         $company = Company::factory()->make(['logo' => $file]);
 

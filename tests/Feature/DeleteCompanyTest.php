@@ -28,7 +28,7 @@ class DeleteCompanyTest extends TestCase
 
     public function test_an_administrator_can_delete_a_company()
     {
-        $this->be(User::factory()->administrator()->create());
+        $this->signIn(true);
 
         $this->delete(route('companies.destroy', ['company' => $this->company->id ]))
             ->assertStatus(302);
@@ -38,7 +38,7 @@ class DeleteCompanyTest extends TestCase
 
     public function test_an_administrator_cannot_delete_a_non_existing_company()
     {
-        $this->be(User::factory()->administrator()->create());
+        $this->signIn(true);
 
         $this->delete(route('companies.destroy', ['company' => 999 ]))
             ->assertStatus(404);

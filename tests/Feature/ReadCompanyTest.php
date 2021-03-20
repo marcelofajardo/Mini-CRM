@@ -29,7 +29,7 @@ class ReadCompanyTest extends TestCase
 
     public function test_an_authenticated_user_can_view_all_companies()
     {
-        $this->be(User::factory()->create());
+        $this->signIn();
 
         $this->get(route('companies.index'))
             ->assertStatus(200)
@@ -38,7 +38,7 @@ class ReadCompanyTest extends TestCase
 
     public function test_an_authenticated_user_can_view_single_company()
     {
-        $this->be(User::factory()->create());
+        $this->signIn();
 
         $this->get(route('companies.show', ['company' => $this->company->id]))
             ->assertStatus(200)
@@ -47,7 +47,7 @@ class ReadCompanyTest extends TestCase
 
     public function test_an_authenticated_user_cannot_view_non_existing_company()
     {
-        $this->be(User::factory()->create());
+        $this->signIn();
         
         $this->get(route('companies.show', ['company' => 999]))
             ->assertNotFound();

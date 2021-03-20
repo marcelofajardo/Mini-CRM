@@ -2,11 +2,13 @@
 
 namespace Tests\Feature;
 
+use App\Mail\CompanyCreatedEmail;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Tests\TestCase;
 
@@ -20,9 +22,17 @@ class CreateCompanyTest extends TestCase
             ->assertRedirect(route('login'));
     }
 
-    public function test_an_authenticated_user_can_view_the_create_company_page()
+    public function test_a_non_administrator_cannot_view_the_create_company_page()
     {
-        $this->be(User::factory()->create());
+        $this->signIn();
+
+        $this->get(route('companies.create'))
+            ->assertStatus(403);
+    }
+
+    public function test_an_administrator_can_view_the_create_company_page()
+    {
+        $this->signIn(true);
 
         $this->get(route('companies.create'))
             ->assertStatus(200)
@@ -37,7 +47,7 @@ class CreateCompanyTest extends TestCase
 
     public function test_a_company_must_have_name()
     {
-        $this->be(User::factory()->administrator()->create());
+        $this->signIn(true);
 
         $company = Company::factory()->make(['name' => null]);
 
@@ -47,7 +57,7 @@ class CreateCompanyTest extends TestCase
 
     public function test_a_company_must_have_email()
     {
-        $this->be(User::factory()->administrator()->create());
+        $this->signIn(true);
 
         $company = Company::factory()->make(['email' => null]);
 
@@ -57,7 +67,7 @@ class CreateCompanyTest extends TestCase
 
     public function test_a_company_must_have_logo()
     {
-        $this->be(User::factory()->administrator()->create());
+        $this->signIn(true);
 
         $company = Company::factory()->make(['logo' => null]);
 
@@ -68,7 +78,7 @@ class CreateCompanyTest extends TestCase
 
     public function test_a_company_must_have_website()
     {
-        $this->be(User::factory()->administrator()->create());
+        $this->signIn(true);
 
         $company = Company::factory()->make(['website' => null]);
 
@@ -78,18 +88,31 @@ class CreateCompanyTest extends TestCase
 
     public function test_an_administrator_can_create_a_company()
     {
+        $this->signIn(true);
+
         Storage::fake('public');
         $file = UploadedFile::fake()->image('logo.png', 100, 100);
-
-        $this->be(User::factory()->administrator()->create());
-
         $company = Company::factory()->make(['logo' => $file]);
 
-        $this->withoutExceptionHandling()->post(route('companies.store'), $company->toArray())
+        $this->post(route('companies.store'), $company->toArray())
             ->assertStatus(302);
 
         $this->assertDatabaseCount('companies', 1);
 
         Storage::disk('public')->assertExists('upload/'. $file->hashName());
+    }
+
+    public function test_an_email_is_sent_when_a_company_is_created()
+    {
+        Mail::fake();
+
+        $this->signIn(true);
+
+        $file = UploadedFile::fake()->image('logo.png', 100, 100);
+        $company = Company::factory()->make(['logo' => $file]);
+
+        $this->post(route('companies.store'), $company->toArray());
+
+        Mail::assertQueued(CompanyCreatedEmail::class);
     }
 }

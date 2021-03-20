@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreCompanyRequest;
 use App\Http\Requests\UpdateCompanyRequest;
+use App\Mail\CompanyCreatedEmail;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 use Yajra\DataTables\Facades\DataTables;
 
 class CompaniesController extends Controller
@@ -33,6 +35,7 @@ class CompaniesController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Company::class);
         return view('companies-create');
     }
 
@@ -44,12 +47,14 @@ class CompaniesController extends Controller
      */
     public function store(StoreCompanyRequest $request)
     {
-        Company::create([
+        $company = Company::create([
             'name' => $request->input('name'),
             'email' => $request->input('email'),
             'logo' => $request->file('logo')->store('upload', 'public'),
             'website' => $request->input('website')
         ]);
+
+        Mail::to(auth()->user()->email)->send(new CompanyCreatedEmail(auth()->user(), $company));
 
         return redirect()->route('companies.index')->with('status', 'Company created successfully.');
     }
@@ -73,6 +78,7 @@ class CompaniesController extends Controller
      */
     public function edit(Company $company)
     {
+        $this->authorize('update', $company);
         return view('companies-edit', compact('company'));
     }
 
@@ -113,6 +119,8 @@ class CompaniesController extends Controller
      */
     public function destroy(Company $company)
     {
+        $this->authorize('delete', $company);
+
         Company::whereId($company->id)->delete();
 
         return redirect()->route('companies.index')->with('status', 'Company deleted successfully.');;
