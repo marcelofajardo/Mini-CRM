@@ -3,7 +3,7 @@
 @section('title', config('app.name', 'AdminLTE'))
 
 @section('content_header')
-    <h1 class="m-0 text-dark">{{ $employee->name }}'s details</h1>
+    <h1 class="m-0 text-dark">{{ $employee->first_name }}'s details</h1>
 @stop
 
 @section('content')

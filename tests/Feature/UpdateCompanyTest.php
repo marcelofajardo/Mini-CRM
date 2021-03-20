@@ -84,13 +84,13 @@ class UpdateCompanyTest extends TestCase
 
     public function test_an_administrator_can_update_a_company()
     {
-        $file = UploadedFile::fake()->image('logo.png', 101, 101);
-
         $this->signIn(true);
 
-        $company = Company::factory()->make(['logo' => $file]);
+        $file = UploadedFile::fake()->image('logo.png', 100, 100);
+        $company = Company::factory()->make(['name' => 'Updated Name', 'logo' => $file]);
 
-        $this->put(route('companies.update', ['company' => $this->company->id ]), $company->toArray())
-            ->assertStatus(302);
+        $this->put(route('companies.update', ['company' => $this->company->id ]), $company->toArray());
+
+        $this->assertEquals($this->company->fresh()->name, 'Updated Name');
     }
 }
