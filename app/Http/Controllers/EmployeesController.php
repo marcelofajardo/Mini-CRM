@@ -2,11 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreEmployeeRequest;
+use App\Http\Requests\UpdateEmployeeRequest;
+use App\Models\Company;
 use App\Models\Employee;
 use Illuminate\Http\Request;
 
 class EmployeesController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('auth');
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -25,7 +33,10 @@ class EmployeesController extends Controller
      */
     public function create()
     {
-        //
+        $this->authorize('create', Employee::class);
+
+        $companies = Company::all();
+        return view('employees-create', compact('companies'));
     }
 
     /**
@@ -34,53 +45,65 @@ class EmployeesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreEmployeeRequest $request)
     {
-        //
+        Employee::create($request->validated());
+
+        return redirect()->route('employees.index')->with('status', 'Employee created successfully.');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
+     * @param  int  Employee $employee
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Employee $employee)
     {
-        //
+        return view('employees-show', compact('employee'));
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  int  Employee $employee
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Employee $employee)
     {
-        //
+        $this->authorize('update', $employee);
+
+        $companies = Company::all();
+
+        return view('employees-edit', compact('employee', 'companies'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param  int  Employee $employee
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
-        //
+        Employee::whereId($employee->id)->update($request->validated());
+
+        return redirect()->route('employees.index')->with('status', 'Employee updated successfully.');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param  int  Employee $employee
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Employee $employee)
     {
-        //
+        $this->authorize('delete', $employee);
+
+        Employee::whereId($employee->id)->delete();
+
+        return redirect()->route('employees.index')->with('status', 'Employee deleted successfully.');
     }
 }

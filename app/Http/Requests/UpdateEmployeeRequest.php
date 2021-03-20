@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use App\Models\Employee;
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreEmployeeRequest extends FormRequest
+class UpdateEmployeeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -14,7 +14,7 @@ class StoreEmployeeRequest extends FormRequest
      */
     public function authorize()
     {
-        return $this->user()->can('create', Employee::class);
+        return $this->user()->can('update', Employee::class);
     }
 
     /**
