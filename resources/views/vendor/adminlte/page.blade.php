@@ -11,6 +11,16 @@
 @section('adminlte_css')
     @stack('css')
     @yield('css')
+
+    <style>
+        .changeLanguage {
+            position:absolute;
+            top:4.5rem;
+            right:0;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+        }
+    </style>
 @stop
 
 @section('classes_body', $layoutHelper->makeBodyClasses())
@@ -46,6 +56,17 @@
             <div class="content">
                 <div class="{{ config('adminlte.classes_content') ?: $def_container_class }}">
                     @yield('content')
+                </div>
+
+                <div class="changeLanguage">
+                    <form action="{{ route('setLocale', ['locale' => 'en']) }}" method="POST" class="d-inline-block">
+                        @csrf
+                        <button type="submit" class="btn btn-primary">EN</button>
+                    </form>
+                    <form action="{{ route('setLocale', ['locale' => 'id']) }}" method="POST" class="d-inline-block">
+                        @csrf
+                        <button type="submit" class="btn btn-success">ID</button>
+                    </form>
                 </div>
             </div>
 

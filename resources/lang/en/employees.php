@@ -1,0 +1,22 @@
+<?php
+return [
+  'title' => 'Employees',
+  'create' => 'Create',
+  'createTitle' => 'Create a new employee',
+  'choose' => 'Choose one...',
+  'save' => 'Save',
+  'update' => 'Update',
+  'updateTitle' => "Editing :name's details",
+  'delete' => 'Delete',
+  'back' => 'Back',
+  'details' => ":name's details",
+  'first_name' => 'First Name',
+  'last_name' => 'Last Name',
+  'company' => 'Company',
+  'email' => 'Email',
+  'phone' => 'Phone',
+  'confirmation' => 'Are you sure deleting this employee?',
+  'createSuccess' => 'Employee created successfully.',
+  'updateSuccess' => 'Employee updated successfully.',
+  'deleteSuccess' => 'Employee deleted successfully.',
+];

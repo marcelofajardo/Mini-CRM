@@ -13,6 +13,7 @@ class EmployeesController extends Controller
     public function __construct()
     {
         $this->middleware('auth');
+        $this->middleware('locale')->except(['store', 'update', 'destroy']);
     }
 
     /**
@@ -49,7 +50,7 @@ class EmployeesController extends Controller
     {
         Employee::create($request->validated());
 
-        return redirect()->route('employees.index')->with('status', 'Employee created successfully.');
+        return redirect()->route('employees.index')->with('status', 'createSuccess');
     }
 
     /**
@@ -89,7 +90,7 @@ class EmployeesController extends Controller
     {
         Employee::whereId($employee->id)->update($request->validated());
 
-        return redirect()->route('employees.index')->with('status', 'Employee updated successfully.');
+        return redirect()->route('employees.index')->with('status', 'updateSuccess');
     }
 
     /**
@@ -104,6 +105,6 @@ class EmployeesController extends Controller
 
         Employee::whereId($employee->id)->delete();
 
-        return redirect()->route('employees.index')->with('status', 'Employee deleted successfully.');
+        return redirect()->route('employees.index')->with('status', 'deleteSuccess');
     }
 }

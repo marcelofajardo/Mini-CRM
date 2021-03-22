@@ -1,0 +1,22 @@
+<?php
+return [
+  'title' => 'Karyawan',
+  'create' => 'Buat',
+  'createTitle' => 'Buat karyawan baru',
+  'choose' => 'Pilih satu...',
+  'save' => 'Simpan',
+  'update' => 'Ubah',
+  'updateTitle' => "Mengubah informasi :name",
+  'delete' => 'Hapus',
+  'back' => 'Kembali',
+  'details' => "Informasi :name",
+  'first_name' => 'Nama Depan',
+  'last_name' => 'Nama Belakang',
+  'company' => 'Perusahaan',
+  'email' => 'Email',
+  'phone' => 'Nomor Telepon',
+  'confirmation' => 'Apakah kamu yakin untuk menghapus karyawan ini?',
+  'createSuccess' => 'Karyawan berhasil dibuat.',
+  'updateSuccess' => 'Karyawan berhasil diubah.',
+  'deleteSuccess' => 'Karyawan berhasil dihapus.',
+];

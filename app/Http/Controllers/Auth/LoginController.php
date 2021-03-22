@@ -35,6 +35,7 @@ class LoginController extends Controller
      */
     public function __construct()
     {
+        $this->middleware('locale')->only('showLoginForm');
         $this->middleware('guest')->except('logout');
     }
 }

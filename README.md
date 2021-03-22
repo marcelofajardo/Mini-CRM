@@ -15,5 +15,5 @@ Built using Laravel 8
 -   [x] Use Datatables.net library to show table – with or without server-side rendering
 -   [x] Use more complicated front-end theme like AdminLTE
 -   [x] Email notification: send email whenever new company is entered (use Mailgun or Mailtrap)
--   [ ] Make the project multi-language (using resources/lang folder)
+-   [x] Make the project multi-language (using resources/lang folder)
 -   [x] Basic testing with phpunit

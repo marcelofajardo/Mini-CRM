@@ -15,6 +15,7 @@ class CompaniesController extends Controller
     public function __construct()
     {
         $this->middleware('auth')->except('employeesJson');
+        $this->middleware('locale')->except(['store', 'update', 'destroy']);
     }
 
     /**
@@ -56,7 +57,7 @@ class CompaniesController extends Controller
 
         Mail::to(auth()->user()->email)->send(new CompanyCreatedEmail(auth()->user(), $company));
 
-        return redirect()->route('companies.index')->with('status', 'Company created successfully.');
+        return redirect()->route('companies.index')->with('status', 'createSuccess');
     }
 
     /**
@@ -108,7 +109,7 @@ class CompaniesController extends Controller
               ]);
         }
 
-        return redirect()->route('companies.index')->with('status', 'Company updated successfully.');;
+        return redirect()->route('companies.index')->with('status', 'updateSuccess');;
     }
 
     /**
@@ -123,7 +124,7 @@ class CompaniesController extends Controller
 
         Company::whereId($company->id)->delete();
 
-        return redirect()->route('companies.index')->with('status', 'Company deleted successfully.');;
+        return redirect()->route('companies.index')->with('status', 'deleteSuccess');;
     }
 
     public function employeesJson (Company $company)
