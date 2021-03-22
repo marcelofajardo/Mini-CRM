@@ -23,7 +23,7 @@ class CompanyFactory extends Factory
     {
         return [
             'name' => $this->faker->word(),
-            'email' => $this->faker->unique()->email(),
+            'email' => $this->faker->unique()->freeEmail(),
             'logo' => 'logo.png',
             'website' => $this->faker->url(),
         ];
