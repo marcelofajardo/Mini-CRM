@@ -1,0 +1,21 @@
+<?php
+return [
+  'title' => 'Perusahaan',
+  'create' => 'Buat',
+  'createTitle' => 'Buat perusahaan baru',
+  'save' => 'Simpan',
+  'update' => 'Ubah',
+  'updateTitle' => "Mengubah informasi :name",
+  'delete' => 'Hapus',
+  'back' => 'Kembali',
+  'details' => "Informasi :name",
+  'name' => 'Nama',
+  'email' => 'Email',
+  'logo' => 'Logo',
+  'website' => 'Laman',
+  'employees' => 'Karyawan',
+  'confirmation' => 'Apakah kamu yakin untuk menghapus perusahaan ini?',
+  'createSuccess' => 'Perusahaan berhasil dibuat.',
+  'updateSuccess' => 'Perusahaan berhasil diubah.',
+  'deleteSuccess' => 'Perusahaan berhasil dihapus.',
+];

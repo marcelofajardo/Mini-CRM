@@ -1,0 +1,21 @@
+<?php
+return [
+  'title' => 'Companies',
+  'create' => 'Create',
+  'createTitle' => 'Create a new company',
+  'save' => 'Save',
+  'update' => 'Update',
+  'updateTitle' => "Editing :name's details",
+  'delete' => 'Delete',
+  'back' => 'Back',
+  'details' => ":name's details",
+  'name' => 'Name',
+  'email' => 'Email',
+  'logo' => 'Logo',
+  'website' => 'Website',
+  'employees' => 'Employees',
+  'confirmation' => 'Are you sure deleting this company?',
+  'createSuccess' => 'Company created successfully.',
+  'updateSuccess' => 'Company updated successfully.',
+  'deleteSuccess' => 'Company deleted successfully.',
+];

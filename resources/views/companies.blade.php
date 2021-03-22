@@ -3,7 +3,7 @@
 @section('title', config('app.name', 'AdminLTE'))
 
 @section('content_header')
-    <h1 class="m-0 text-dark">Companies</h1>
+    <h1 class="m-0 text-dark">{{ __('companies.title') }}</h1>
 @stop
 
 @section('content')
@@ -11,14 +11,14 @@
     <div class="form-group">
       <div class="alert alert-info">
         <i class="fas fa-info-circle mr-1"></i>
-        <span>{{ session('status') }}</span>
+        <span>{{ __('companies.' . session('status')) }}</span>
       </div>
     </div>
   @endif
   
   <a href="{{ route('companies.create') }}" class="btn btn-success mb-3">
     <i class="fas fa-plus"></i>
-    <span>Create</span>
+    <span>{{ __('companies.create') }}</span>
   </a>
   @foreach ($companies as $company)
     <div class="row">
