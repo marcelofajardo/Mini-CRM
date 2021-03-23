@@ -12,14 +12,14 @@
     @method('PUT')
     <div class="form-group">
       <label for="name">{{ __('companies.name') }}</label>
-      <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ $company->name }}" required>  
+      <input type="text" name="name" id="name" class="form-control @error('name') is-invalid @enderror" value="{{ $company->name }}">  
     </div>
     @error('name')
       <div class="alert alert-danger">{{ $message }}</div>
     @enderror
     <div class="form-group">
       <label for="email">{{ __('companies.email') }}</label>
-      <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ $company->email }}" required>  
+      <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ $company->email }}">  
     </div>
     @error('email')
       <div class="alert alert-danger">{{ $message }}</div>
@@ -34,7 +34,7 @@
     @enderror
     <div class="form-group">
       <label for="website">{{ __('companies.website') }}</label>
-      <input type="url" name="website" id="website" class="form-control @error('website') is-invalid @enderror" value="{{ $company->website }}" required>  
+      <input type="url" name="website" id="website" class="form-control @error('website') is-invalid @enderror" value="{{ $company->website }}">  
     </div>
     @error('website')
       <div class="alert alert-danger">{{ $message }}</div>

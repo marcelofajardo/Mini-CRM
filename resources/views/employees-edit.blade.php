@@ -12,21 +12,21 @@
     @method('PUT')
     <div class="form-group">
       <label for="first_name">{{ __('employees.first_name') }}</label>
-      <input type="text" name="first_name" id="first_name" class="form-control @error('first_name') is-invalid @enderror" value="{{ $employee->first_name }}" required>  
+      <input type="text" name="first_name" id="first_name" class="form-control @error('first_name') is-invalid @enderror" value="{{ $employee->first_name }}">  
     </div>
     @error('first_name')
       <div class="alert alert-danger">{{ $message }}</div>
     @enderror
     <div class="form-group">
       <label for="last_name">{{ __('employees.last_name') }}</label>
-      <input type="text" name="last_name" id="last_name" class="form-control @error('last_name') is-invalid @enderror" value="{{ $employee->last_name }}" required>  
+      <input type="text" name="last_name" id="last_name" class="form-control @error('last_name') is-invalid @enderror" value="{{ $employee->last_name }}">  
     </div>
     @error('last_name')
       <div class="alert alert-danger">{{ $message }}</div>
     @enderror
     <div class="form-group">
       <label for="company">{{ __('employees.company') }}</label>
-      <select class="form-control @error('company') is-invalid @enderror" id="company" name="company" required>
+      <select class="form-control @error('company') is-invalid @enderror" id="company" name="company">
         <option value="">{{ __('employees.choose') }}</option>
         @foreach ($companies as $company)
           <option value="{{ $company->id }}" {{ $employee->company == $company->id ? 'selected' : '' }}>{{ $company->name }}</option>
@@ -38,14 +38,14 @@
     @enderror
     <div class="form-group">
       <label for="email">{{ __('employees.email') }}</label>
-      <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ $employee->email }}" required>  
+      <input type="email" name="email" id="email" class="form-control @error('email') is-invalid @enderror" value="{{ $employee->email }}">  
     </div>
     @error('email')
       <div class="alert alert-danger">{{ $message }}</div>
     @enderror
     <div class="form-group">
       <label for="phone">{{ __('employees.phone') }}</label>
-      <input type="text" name="phone" id="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ $employee->phone }}" required minlength="11" maxlength="15">  
+      <input type="text" name="phone" id="phone" class="form-control @error('phone') is-invalid @enderror" value="{{ $employee->phone }}">  
     </div>
     @error('phone')
       <div class="alert alert-danger">{{ $message }}</div>

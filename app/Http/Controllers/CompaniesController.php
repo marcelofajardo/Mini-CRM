@@ -12,12 +12,6 @@ use Yajra\DataTables\Facades\DataTables;
 
 class CompaniesController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth')->except('employeesJson');
-        $this->middleware('locale')->except(['store', 'update', 'destroy']);
-    }
-
     /**
      * Display a listing of the resource.
      *

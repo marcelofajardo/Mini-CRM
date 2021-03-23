@@ -19,21 +19,23 @@ use Illuminate\Support\Facades\Session;
 |
 */
 
+Route::middleware(['locale'])->group(function () {
+  Auth::routes([
+      'register' => false,
+      'verify' => false,
+      'reset' => false
+    ]
+  );
 
-Auth::routes([
-    'register' => false,
-    'verify' => false,
-    'reset' => false
-  ]
-);
-
-Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-Route::get('companies/{company}/employees-json', [CompaniesController::class, 'employeesJson'])->name('employees-json');
-Route::resource('companies', CompaniesController::class);
-Route::resource('employees', EmployeesController::class);
-
+  Route::get('/', [WelcomeController::class, 'index'])->name('welcome');
+  Route::get('/companies/{company}/employees-json', [CompaniesController::class, 'employeesJson'])->name('employees-json');
+  
+  Route::middleware(['auth'])->group(function () {
+    Route::get('/home', [HomeController::class, 'index'])->name('home');
+    Route::resource('companies', CompaniesController::class);
+    Route::resource('employees', EmployeesController::class);
+  });
+});
 
 Route::get('/locale', function () {
   return Session::get('locale');

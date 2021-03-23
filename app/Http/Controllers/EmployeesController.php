@@ -10,12 +10,6 @@ use Illuminate\Http\Request;
 
 class EmployeesController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware('auth');
-        $this->middleware('locale')->except(['store', 'update', 'destroy']);
-    }
-
     /**
      * Display a listing of the resource.
      *
