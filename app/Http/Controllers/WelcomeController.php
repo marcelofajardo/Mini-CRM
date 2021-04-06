@@ -2,12 +2,18 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
 use Illuminate\Http\Request;
+use Throwable;
 
 class WelcomeController extends Controller
 {
     public function index ()
     {
-        return view('welcome');
+        try {
+            return view('welcome');
+        } catch(Throwable $e) {
+            throw $e;
+        }
     }
 }

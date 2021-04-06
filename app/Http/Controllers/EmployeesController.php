@@ -7,6 +7,8 @@ use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Company;
 use App\Models\Employee;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Throwable;
 
 class EmployeesController extends Controller
 {
@@ -17,8 +19,12 @@ class EmployeesController extends Controller
      */
     public function index()
     {
-        $employees = Employee::latest()->paginate(10);
-        return view('employees', compact('employees'));
+        try {
+            $employees = Employee::latest()->paginate(10);
+            return view('employees', compact('employees'));
+        } catch (Throwable $e) {
+            throw $e;
+        }
     }
 
     /**
@@ -29,9 +35,13 @@ class EmployeesController extends Controller
     public function create()
     {
         $this->authorize('create', Employee::class);
-
-        $companies = Company::all();
-        return view('employees-create', compact('companies'));
+        
+        try {
+            $companies = Company::all();
+            return view('employees-create', compact('companies'));
+        } catch (Throwable $e) {
+            return redirect()->route('employees.index');
+        }
     }
 
     /**
@@ -42,9 +52,17 @@ class EmployeesController extends Controller
      */
     public function store(StoreEmployeeRequest $request)
     {
-        Employee::create($request->validated());
+        DB::beginTransaction();
+        try {
+            Employee::create($request->validated());
+            DB::commit();
+            
+            return redirect()->route('employees.index')->with('status', 'createSuccess');
+        } catch (Throwable $e) {
+            DB::rollBack();
 
-        return redirect()->route('employees.index')->with('status', 'createSuccess');
+            return redirect()->route('employees.create');
+        }
     }
 
     /**
@@ -55,7 +73,11 @@ class EmployeesController extends Controller
      */
     public function show(Employee $employee)
     {
-        return view('employees-show', compact('employee'));
+        try {
+            return view('employees-show', compact('employee'));
+        } catch (Throwable $e) {
+            return redirect()->route('employees.index');
+        }
     }
 
     /**
@@ -68,9 +90,13 @@ class EmployeesController extends Controller
     {
         $this->authorize('update', $employee);
 
-        $companies = Company::all();
-
-        return view('employees-edit', compact('employee', 'companies'));
+        try {
+            $companies = Company::all();
+    
+            return view('employees-edit', compact('employee', 'companies'));
+        } catch (Throwable $e) {
+            return redirect()->route('employees.show', compact('employee'));
+        }
     }
 
     /**
@@ -82,9 +108,17 @@ class EmployeesController extends Controller
      */
     public function update(UpdateEmployeeRequest $request, Employee $employee)
     {
-        Employee::whereId($employee->id)->update($request->validated());
+        DB::beginTransaction();
+        try {
+            Employee::whereId($employee->id)->update($request->validated());
+            DB::commit();
 
-        return redirect()->route('employees.index')->with('status', 'updateSuccess');
+            return redirect()->route('employees.index')->with('status', 'updateSuccess');
+        } catch (Throwable $e) {
+            DB::rollBack();
+
+            return redirect()->route('employees.edit', compact('employee'));
+        }
     }
 
     /**
@@ -97,8 +131,16 @@ class EmployeesController extends Controller
     {
         $this->authorize('delete', $employee);
 
-        Employee::whereId($employee->id)->delete();
+        DB::beginTransaction();
+        try {
+            Employee::whereId($employee->id)->delete();
+            DB::commit();
 
-        return redirect()->route('employees.index')->with('status', 'deleteSuccess');
+            return redirect()->route('employees.index')->with('status', 'deleteSuccess');
+        } catch (Throwable $e) {
+            DB::rollback();
+            
+            return redirect()->route('employees.show', compact('employee'));
+        }
     }
 }

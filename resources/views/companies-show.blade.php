@@ -79,6 +79,18 @@
                 });
 
                 $("#btnDelete").on('click', function() {
+                  let employeesCount = '{{ $company->employees->count() }}';
+                  let checkMessage = '';
+                  if (employeesCount > 0) {
+                    if(data == "id") {
+                    checkMessage = 'Perusahaan ini masih memiliki karyawan. ';
+                    } else {
+                    checkMessage = 'This company still has employees. ';
+                    }
+
+                    alert(checkMessage);
+                  }
+
                   return confirm(message);
                 });
               }

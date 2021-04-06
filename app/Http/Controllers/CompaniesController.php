@@ -7,7 +7,9 @@ use App\Http\Requests\UpdateCompanyRequest;
 use App\Mail\CompanyCreatedEmail;
 use App\Models\Company;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Throwable;
 use Yajra\DataTables\Facades\DataTables;
 
 class CompaniesController extends Controller
@@ -19,8 +21,12 @@ class CompaniesController extends Controller
      */
     public function index()
     {
-        $companies = Company::latest()->paginate(10);
-        return view('companies', compact('companies'));
+        try {
+            $companies = Company::latest()->paginate(10);
+            return view('companies', compact('companies'));
+        } catch (Throwable $e) {
+            throw $e;
+        }
     }
 
     /**
@@ -31,7 +37,12 @@ class CompaniesController extends Controller
     public function create()
     {
         $this->authorize('create', Company::class);
-        return view('companies-create');
+
+        try {
+            return view('companies-create');
+        } catch (Throwable $e) {
+            return redirect()->route('companies.index');
+        }
     }
 
     /**
@@ -42,16 +53,23 @@ class CompaniesController extends Controller
      */
     public function store(StoreCompanyRequest $request)
     {
-        $company = Company::create([
-            'name' => $request->input('name'),
-            'email' => $request->input('email'),
-            'logo' => $request->file('logo')->store('upload', 'public'),
-            'website' => $request->input('website')
-        ]);
-
-        Mail::to(auth()->user()->email)->send(new CompanyCreatedEmail(auth()->user(), $company));
-
-        return redirect()->route('companies.index')->with('status', 'createSuccess');
+        DB::beginTransaction();
+        try {
+            $company = Company::create([
+                'name' => $request->input('name'),
+                'email' => $request->input('email'),
+                'logo' => $request->file('logo')->store('upload', 'public'),
+                'website' => $request->input('website')
+            ]);
+            DB::commit();
+    
+            Mail::to(auth()->user()->email)->send(new CompanyCreatedEmail(auth()->user(), $company));
+            
+            return redirect()->route('companies.index')->with('status', 'createSuccess');
+        } catch (Throwable $e) {
+            DB::rollBack();
+            return redirect()->route('companies.create');
+        }
     }
 
     /**
@@ -62,7 +80,11 @@ class CompaniesController extends Controller
      */
     public function show(Company $company)
     {
-        return view('companies-show', compact('company'));
+        try {
+            return view('companies-show', compact('company'));
+        } catch (Throwable $e) {
+            return redirect()->route('companies.index');
+        }
     }
 
     /**
@@ -74,7 +96,11 @@ class CompaniesController extends Controller
     public function edit(Company $company)
     {
         $this->authorize('update', $company);
-        return view('companies-edit', compact('company'));
+        try {
+            return view('companies-edit', compact('company'));
+        } catch (Throwable $e) {
+            return redirect()->route('companies.show', compact('company'));
+        }
     }
 
     /**
@@ -86,24 +112,32 @@ class CompaniesController extends Controller
      */
     public function update(UpdateCompanyRequest $request, Company $company)
     {
-        if ($request->file('logo') !== null) {
-            Company::whereId($company->id)
-              ->update([
-                'name' => $request->input('name'),
-                'email' => $request->input('email'),
-                'logo' => $request->file('logo')->store('upload', 'public'),
-                'website' => $request->input('website'),
-              ]);
-        } else {
-            Company::whereId($company->id)
-              ->update([
-                'name' => $request->input('name'),
-                'email' => $request->input('email'),
-                'website' => $request->input('website'),
-              ]);
-        }
+        DB::beginTransaction();
+        try {
+            if ($request->file('logo') !== null) {
+                Company::whereId($company->id)
+                  ->update([
+                    'name' => $request->input('name'),
+                    'email' => $request->input('email'),
+                    'logo' => $request->file('logo')->store('upload', 'public'),
+                    'website' => $request->input('website'),
+                  ]);
+            } else {
+                Company::whereId($company->id)
+                  ->update([
+                    'name' => $request->input('name'),
+                    'email' => $request->input('email'),
+                    'website' => $request->input('website'),
+                  ]);
+            }
+            DB::commit();
+    
+            return redirect()->route('companies.index')->with('status', 'updateSuccess');;
+        } catch (Throwable $e) {
+            DB::rollBack();
 
-        return redirect()->route('companies.index')->with('status', 'updateSuccess');;
+            return redirect()->route('companies.edit', compact('company'));
+        }
     }
 
     /**
@@ -115,10 +149,18 @@ class CompaniesController extends Controller
     public function destroy(Company $company)
     {
         $this->authorize('delete', $company);
+        
+        DB::beginTransaction();
+        try {
+            Company::whereId($company->id)->delete();
+            DB::commit();
+    
+            return redirect()->route('companies.index')->with('status', 'deleteSuccess');;
+        } catch (Throwable $e) {
+            DB::rollBack();
 
-        Company::whereId($company->id)->delete();
-
-        return redirect()->route('companies.index')->with('status', 'deleteSuccess');;
+            return redirect()->route('companies.show', compact('company'));
+        }
     }
 
     public function employeesJson (Company $company)
