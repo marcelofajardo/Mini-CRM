@@ -23,7 +23,9 @@ class EmployeesController extends Controller
             $employees = Employee::latest()->paginate(10);
             return view('employees', compact('employees'));
         } catch (Throwable $e) {
-            throw $e;
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -40,7 +42,9 @@ class EmployeesController extends Controller
             $companies = Company::all();
             return view('employees-create', compact('companies'));
         } catch (Throwable $e) {
-            return redirect()->route('employees.index');
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -61,7 +65,9 @@ class EmployeesController extends Controller
         } catch (Throwable $e) {
             DB::rollBack();
 
-            return redirect()->route('employees.create');
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -76,7 +82,9 @@ class EmployeesController extends Controller
         try {
             return view('employees-show', compact('employee'));
         } catch (Throwable $e) {
-            return redirect()->route('employees.index');
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -95,7 +103,9 @@ class EmployeesController extends Controller
     
             return view('employees-edit', compact('employee', 'companies'));
         } catch (Throwable $e) {
-            return redirect()->route('employees.show', compact('employee'));
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -117,7 +127,9 @@ class EmployeesController extends Controller
         } catch (Throwable $e) {
             DB::rollBack();
 
-            return redirect()->route('employees.edit', compact('employee'));
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -140,7 +152,9 @@ class EmployeesController extends Controller
         } catch (Throwable $e) {
             DB::rollback();
             
-            return redirect()->route('employees.show', compact('employee'));
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 }

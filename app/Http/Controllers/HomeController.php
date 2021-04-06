@@ -12,7 +12,9 @@ class HomeController extends Controller
         try {
             return view('home');
         } catch (Throwable $e) {
-            throw $e;
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 }

@@ -25,7 +25,9 @@ class CompaniesController extends Controller
             $companies = Company::latest()->paginate(10);
             return view('companies', compact('companies'));
         } catch (Throwable $e) {
-            throw $e;
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -41,7 +43,9 @@ class CompaniesController extends Controller
         try {
             return view('companies-create');
         } catch (Throwable $e) {
-            return redirect()->route('companies.index');
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -68,7 +72,9 @@ class CompaniesController extends Controller
             return redirect()->route('companies.index')->with('status', 'createSuccess');
         } catch (Throwable $e) {
             DB::rollBack();
-            return redirect()->route('companies.create');
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -83,7 +89,9 @@ class CompaniesController extends Controller
         try {
             return view('companies-show', compact('company'));
         } catch (Throwable $e) {
-            return redirect()->route('companies.index');
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -99,7 +107,9 @@ class CompaniesController extends Controller
         try {
             return view('companies-edit', compact('company'));
         } catch (Throwable $e) {
-            return redirect()->route('companies.show', compact('company'));
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -136,7 +146,9 @@ class CompaniesController extends Controller
         } catch (Throwable $e) {
             DB::rollBack();
 
-            return redirect()->route('companies.edit', compact('company'));
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
@@ -159,7 +171,9 @@ class CompaniesController extends Controller
         } catch (Throwable $e) {
             DB::rollBack();
 
-            return redirect()->route('companies.show', compact('company'));
+            return view('errors.error', [
+                'errors' => $e->getMessage()
+            ]);
         }
     }
 
